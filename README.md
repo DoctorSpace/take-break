@@ -16,7 +16,7 @@
 
 | Настройки | Экран перерыва |
 | :---: | :---: |
-| <a href="Assets/main.png"><img src="Assets/main.png" alt="Окно настроек Take Break" width="280"></a> | <a href="Assets/blur.png"><img src="Assets/blur.png" alt="Экран перерыва с блюром и таймером" width="360"></a> |
+| <a href="Assets/main.png"><img src="Assets/main.png" alt="Окно настроек Take Break" width="280"></a> | <a href="Assets/blur.png"><img src="Assets/blur.png" alt="Экран перерыва с блюром и таймером" width="500"></a> |
 
 ## Запуск
 
