@@ -1,0 +1,66 @@
+<Window x:Class="TakeBreak.BreakWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:TakeBreak.Controls"
+        WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
+        Background="#202020" Title="Время сделать перерыв" UseLayoutRounding="True"
+        Style="{StaticResource {x:Type Window}}">
+  <Grid x:Name="Root">
+    <Image x:Name="DesktopImage" Stretch="Fill" IsHitTestVisible="False">
+      <Image.Effect><BlurEffect Radius="32" KernelType="Gaussian" RenderingBias="Performance" /></Image.Effect>
+    </Image>
+    <Border IsHitTestVisible="False">
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+          <GradientStop Color="#C51B1B1B" Offset="0" />
+          <GradientStop Color="#AE444444" Offset="0.5" />
+          <GradientStop Color="#D51C1C1C" Offset="1" />
+        </LinearGradientBrush>
+      </Border.Background>
+    </Border>
+    <Viewbox Stretch="Uniform" StretchDirection="DownOnly" Margin="24">
+      <Border x:Name="MainCard" Width="560" CornerRadius="28" Padding="40,24,40,32" BorderThickness="1" BorderBrush="#486F6F6F" Background="#DB242424">
+        <Border.Effect><DropShadowEffect BlurRadius="60" ShadowDepth="12" Opacity="0.22" Color="#000000" /></Border.Effect>
+        <Grid>
+          <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+          <TextBlock Text="ПЕРЕРЫВ" Foreground="{StaticResource MutedBrush}" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+          <Button x:Name="CollapseButton" Style="{StaticResource IconButton}" HorizontalAlignment="Right" Click="Collapse_Click" ToolTip="Свернуть в мини-панель" AutomationProperties.Name="Свернуть в мини-панель">
+            <Path Data="M 1,1 L 13,1 L 13,13 M 13,1 L 5,9 M 1,13 L 5,13" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="14" Height="14" />
+          </Button>
+          <StackPanel Grid.Row="1">
+            <TextBlock x:Name="HeadingText" Text="Время выдохнуть." FontSize="32" FontWeight="SemiBold" TextAlignment="Center" Margin="0,16,0,28" />
+            <Grid Width="220" Height="220" HorizontalAlignment="Center">
+              <Ellipse Width="204" Height="204" Stroke="#494949" StrokeThickness="4" />
+              <Path x:Name="ProgressArc" Stroke="{DynamicResource AccentBrush}" StrokeThickness="4" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+              <TextBlock x:Name="CountdownText" Text="03:00" Foreground="{DynamicResource AccentBrush}" FontSize="49" FontWeight="Light" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI" />
+            </Grid>
+            <TextBlock x:Name="RemainingText" Text="Осталось 3 минуты" Foreground="{StaticResource MutedBrush}" FontSize="13" HorizontalAlignment="Center" Margin="0,18,0,28" />
+            <controls:HoldButton x:Name="FinishButton" Style="{StaticResource {x:Type Button}}" Content="Завершить перерыв" Width="236" Height="48" HorizontalAlignment="Center" Foreground="{DynamicResource AccentBrush}" BorderBrush="{DynamicResource AccentBrush}" Click="Continue_Click" ToolTip="Удерживайте 1,2 секунды" AutomationProperties.Name="Завершить перерыв — удерживайте 1,2 секунды" AutomationProperties.HelpText="Удерживайте левую кнопку мыши, пробел или Enter до заполнения кнопки.">
+              <controls:HoldButton.Template>
+                <ControlTemplate TargetType="controls:HoldButton">
+                  <Border x:Name="Chrome" CornerRadius="10" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Background="Transparent">
+                    <Grid>
+                      <Border CornerRadius="9" Background="{DynamicResource AccentBrush}" Opacity="0.24" RenderTransformOrigin="0,0.5" IsHitTestVisible="False">
+                        <Border.RenderTransform><ScaleTransform ScaleX="{Binding Progress, RelativeSource={RelativeSource TemplatedParent}}" /></Border.RenderTransform>
+                      </Border>
+                      <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                  </Border>
+                  <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#0CFFFFFF" /></Trigger>
+                    <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Chrome" Property="BorderThickness" Value="2" /></Trigger>
+                  </ControlTemplate.Triggers>
+                </ControlTemplate>
+              </controls:HoldButton.Template>
+            </controls:HoldButton>
+            <TextBlock Text="Удерживайте, чтобы завершить" Foreground="#8F8F8F" FontSize="11" HorizontalAlignment="Center" Margin="0,10,0,0" />
+          </StackPanel>
+        </Grid>
+      </Border>
+    </Viewbox>
+    <StackPanel x:Name="SecondaryContent" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Opacity="0.6">
+      <TextBlock Text="Ⅱ" Foreground="#D0D0D0" FontSize="48" HorizontalAlignment="Center" />
+    </StackPanel>
+    <TextBlock Text="TAKE BREAK" Foreground="#929292" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,22" IsHitTestVisible="False" />
+  </Grid>
+</Window>

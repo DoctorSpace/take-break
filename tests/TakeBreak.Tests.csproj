@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Models/BreakSettings.cs" Link="BreakSettings.cs" />
+    <Compile Include="../Models/AccentColorValue.cs" Link="AccentColorValue.cs" />
+    <Compile Include="../Services/BreakSchedule.cs" Link="BreakSchedule.cs" />
+    <Compile Include="../Services/SettingsStore.cs" Link="SettingsStore.cs" />
+    <Compile Include="../Services/BreakHeadings.cs" Link="BreakHeadings.cs" />
+  </ItemGroup>
+</Project>
