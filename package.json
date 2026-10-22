@@ -1,0 +1,61 @@
+{
+  "name": "take-break",
+  "version": "0.8.0",
+  "description": "Приложение для регулярных перерывов",
+  "private": true,
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "react-native start",
+    "windows": "react-native run-windows",
+    "macos": "react-native run-macos",
+    "web": "vite --host 127.0.0.1",
+    "build:web": "vite build",
+    "build:electron": "node scripts/build-electron.mjs",
+    "build": "npm run typecheck && npm run build:web && npm run build:electron",
+    "linux": "npm run build && electron build/electron/main.js",
+    "package:linux": "npm run build && electron-builder --linux AppImage tar.gz --publish never",
+    "release:gitlab": "node scripts/publish-release.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:ui": "playwright test",
+    "smoke:electron": "npm run build && electron build/electron/main.js --smoke-test"
+  },
+  "dependencies": {
+    "base64-js": "1.5.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-native": "0.83.10",
+    "react-native-macos": "0.83.0",
+    "react-native-web": "0.21.2",
+    "react-native-windows": "0.83.2",
+    "upng-js": "2.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@react-native-community/cli": "20.2.0",
+    "@react-native-community/cli-platform-ios": "20.2.0",
+    "@react-native-windows/find-dotnet-tools": "0.85.0",
+    "@react-native/babel-preset": "0.83.10",
+    "@react-native/metro-config": "0.83.10",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/upng-js": "^2.1.5",
+    "@vitejs/plugin-react": "^5.1.0",
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.0",
+    "vitest": "^3.2.4"
+  },
+  "build": {
+    "appId": "org.takebreak.app",
+    "productName": "Take Break",
+    "directories": { "output": "release" },
+    "files": ["build/electron/**", "build/web/**", "Assets/app.ico", "!node_modules/**"],
+    "npmRebuild": false,
+    "extraMetadata": { "main": "build/electron/main.js" },
+    "linux": { "target": ["AppImage", "tar.gz"], "category": "Utility", "artifactName": "TakeBreak-${version}-linux-${arch}.${ext}" }
+  }
+}

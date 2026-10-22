@@ -1,0 +1,6 @@
+html, body, #root { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #181818; }
+body[data-scene="mini"], body[data-scene="mini"] #root { background: transparent; }
+#root { display: flex; }
+* { box-sizing: border-box; }
+input, textarea { outline: none; }
+button, [role="button"], [role="switch"], [role="checkbox"] { cursor: pointer; }

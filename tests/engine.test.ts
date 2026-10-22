@@ -1,0 +1,16 @@
+import {expect, it} from 'vitest';
+import {Engine} from '../src/core/Engine';
+import {defaults} from '../src/core/settings';
+import type {Services, Scene} from '../src/core/types';
+function fixture() {
+  let wall = +new Date(2026, 9, 12, 10), mono = 100, saved = 0, fail = false;
+  const scenes = new Set<Scene>();
+  const services: Services = {load: async () => ({json: null, startup: false}), save: async () => {if (fail) throw Error('disk full'); saved++;}, setStartup: async () => {}, capture: async () => [{id: '0', bounds: {x: 0, y: 0, width: 1920, height: 1080}, primary: true, image: ''}], open: async info => {scenes.add(info.scene);}, close: async scene => {scenes.delete(scene);}, exit: async () => {}, log: () => {}};
+  const engine = new Engine(services, {wall: () => wall, mono: () => mono});
+  return {engine, scenes, advance(ms: number) {wall += ms; mono += ms;}, fail() {fail = true;}, saves: () => saved};
+}
+it('retains a monotonic countdown through collapse and restore', async () => {const f = fixture(), e = f.engine; await e.initialize(); await e.dispatch({type: 'start'}); const end = e.getSnapshot().endAt; await e.dispatch({type: 'collapse'}); expect(f.scenes.has('mini')).toBe(true); f.advance(2000); await e.dispatch({type: 'tick'}); await e.dispatch({type: 'restore'}); expect(e.getSnapshot().endAt).toBe(end); expect(e.getSnapshot().remainingMs).toBe(178000);});
+it('cancels short holds and completes at 1.2 seconds', async () => {const f = fixture(), e = f.engine; await e.initialize(); await e.dispatch({type: 'start'}); await e.dispatch({type: 'holdStart'}); f.advance(600); await e.dispatch({type: 'tick'}); expect(e.getSnapshot().holdProgress).toBe(.5); await e.dispatch({type: 'holdCancel'}); expect(e.getSnapshot().breaking).toBe(true); await e.dispatch({type: 'holdStart'}); f.advance(1200); await e.dispatch({type: 'tick'}); expect(e.getSnapshot().breaking).toBe(false); expect(f.scenes.size).toBe(0);});
+it('keeps settings unchanged if saving fails', async () => {const f = fixture(), e = f.engine; await e.initialize(); f.fail(); await e.dispatch({type: 'edit', settings: {...defaults(), IntervalMinutes: 60}}); f.advance(501); await e.dispatch({type: 'tick'}); expect(e.getSnapshot().settings.IntervalMinutes).toBe(40); expect(e.getSnapshot().error).toMatch(/сохранить/);});
+it('previews a color without saving and restores on cancel', async () => {const f = fixture(), e = f.engine; await e.initialize(); const next = e.getSnapshot().nextBreak; await e.dispatch({type: 'openPalette'}); await e.dispatch({type: 'previewColor', color: '#123456'}); expect(e.getSnapshot().accent).toBe('#123456'); expect(f.saves()).toBe(0); await e.dispatch({type: 'cancelColor'}); expect(e.getSnapshot().accent).toBe('#B8CDB5'); expect(e.getSnapshot().nextBreak).toBe(next);});
+it('blocks breaks on lock and reschedules after clock gaps', async () => {const f = fixture(), e = f.engine; await e.initialize(); await e.dispatch({type: 'lock'}); await e.dispatch({type: 'start'}); expect(e.getSnapshot().breaking).toBe(false); await e.dispatch({type: 'unlock'}); await e.dispatch({type: 'start'}); f.advance(60000); await e.dispatch({type: 'tick'}); expect(e.getSnapshot().breaking).toBe(false);});

@@ -3,5 +3,32 @@ obj/
 dist/
 .vs/
 *.user
-tests/bin/
-tests/obj/
+
+# JavaScript dependencies (including nested workspaces)
+node_modules/
+
+# Generated bundles, installers and test artifacts
+build/
+release/
+coverage/
+playwright-report/
+test-results/
+.cache/
+.npm/
+.metro-health-check*
+
+# Package manager logs and local environment
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
+!.env.example
+
+# Native dependency and local IDE outputs
+Pods/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+.DS_Store
+Thumbs.db
